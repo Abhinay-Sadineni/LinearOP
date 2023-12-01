@@ -25,9 +25,9 @@ def get_new_z(A2,z,X,b):
 
     #A[i] * z + alpha * A[i] * X = b[i]
     for i in range(len(A2)):
-        difference = b_i - np.dot(A[i], z)
-        if np.allclose(difference % np.dot(A[i], X), 0):
-           alpha = difference / np.dot(A[i], X)
+        difference = b[i] - np.dot(A2[i], z)
+        if np.allclose(difference % np.dot(A2[i], X), 0):
+           alpha = difference / np.dot(A2[i], X)
            break
     return z + alpha*X
 
@@ -45,7 +45,7 @@ def get_any_vertex(A,b,z):
         A1 = A[tight_rows]
         A2 =  A[untight_rows]
         # get an arbitary vector from nullspace for A1
-        nullspace = np.linalg.null_space(A1)
+        null_space_matrix = np.linalg.null_space(A1)
         X = null_space_matrix[:, 0]
         z = get_new_z(A2,z,X,b)
         tight_rows , untight_rows =  get_rows(A,z,b)
