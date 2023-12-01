@@ -5,7 +5,7 @@
 
 
 #given feasible point z
-import np as numpy
+import numpy as np
 
 tolerance = 1e-5
 
