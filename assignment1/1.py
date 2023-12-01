@@ -7,18 +7,44 @@
 #given feasible point z
 import np as numpy
 
-def get_any_vertex(A,b,c,z):
+tolerance = 1e-5
 
+def get_rows(A,z,b):
+    R = np.dot(A,z)
+    tight = []
+    untight = []
+    for i in range(b.size()):
+      if R[i] < tolerance :
+        tight.append(i)
+      else :
+        untight.append(i)
+    return tight , untight      
+
+def get_any_vertex(A,b,c,z):
     if np.dot(A,z) <= b:
         #do nothing
        print("intial point is feasible")
-    
     else:
         return None
+    # get tight , untight rows
+    tight_rows , untight_rows =  get_rows(A,z,b)
 
-    while( np.dot(A,z) != b):
-         #A1 = tight rows
-         #A2 =untight rows
+    # find the vertex from intial feasible point
+    while(len(tight_rows) < len(z) ):
+        A1 = A[tight_rows]
+        A2 =  A[untight_rows]
+        # get an arbitary vector from nullspace for A1
+        nullspace = np.linalg.null_space(A1)
+        X = null_space_matrix[:, 0]
+        
+
+
+        
+
+
+
+
+    
          
 
 
