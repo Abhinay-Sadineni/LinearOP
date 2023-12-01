@@ -20,7 +20,19 @@ def get_rows(A,z,b):
         untight.append(i)
     return tight , untight      
 
-def get_any_vertex(A,b,c,z):
+
+def get_new_z(A2,z,X,b):
+
+    #A[i] * z + alpha * A[i] * X = b[i]
+    for i in range(len(A2)):
+        difference = b_i - np.dot(A[i], z)
+        if np.allclose(difference % np.dot(A[i], X), 0):
+           alpha = difference / np.dot(A[i], X)
+           break
+    return z + alpha*X
+
+
+def get_any_vertex(A,b,z):
     if np.dot(A,z) <= b:
         #do nothing
        print("intial point is feasible")
@@ -28,7 +40,6 @@ def get_any_vertex(A,b,c,z):
         return None
     # get tight , untight rows
     tight_rows , untight_rows =  get_rows(A,z,b)
-
     # find the vertex from intial feasible point
     while(len(tight_rows) < len(z) ):
         A1 = A[tight_rows]
@@ -36,7 +47,16 @@ def get_any_vertex(A,b,c,z):
         # get an arbitary vector from nullspace for A1
         nullspace = np.linalg.null_space(A1)
         X = null_space_matrix[:, 0]
+        z = get_new_z(A2,z,X,b)
+        tight_rows , untight_rows =  get_rows(A,z,b)
+    return z
+
+
         
+
+
+
+
 
 
         
