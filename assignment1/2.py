@@ -3,6 +3,7 @@
 #2. Polytope is bounded
 #3. Rank of A is n 
 
+
 from scipy.linalg import null_space
 #given feasible point z
 import numpy as np
@@ -83,14 +84,13 @@ def get_opt_vertex(A,z,C,b):
        z,flg = get_new_z(A,A2,z,c,b)
 
        if not flg :
-               print("Not Possible\n")
+               print("Unbounded\n")
                break
        tight_rows , untight_rows =  get_rows(A,z,b)
        A1 = np.array([A[i] for i in tight_rows])
        A2 =  [A[i] for i in untight_rows]
        coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
     return z
-    
     
 
 A = [[1,1],[-1,-1],[-1,0],[0,-1]]
@@ -101,7 +101,6 @@ z = get_any_vertex(A,b,z)
 print(z)
 z = get_opt_vertex(A,z,C,b)
 print(z)
-
 
 def main():
     arr = np.loadtxt("sample_data.csv", delimiter=",", dtype=float)
@@ -124,6 +123,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
 
 
 
