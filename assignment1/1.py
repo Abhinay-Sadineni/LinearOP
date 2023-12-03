@@ -1,3 +1,11 @@
+#team details
+#Sadineni Abhinay - CS21BTECH11055
+#G harshavardhan reddy -CS21BTECH11017
+#Karthik Kotikalapudi - CS21BTECH11030
+#Akkasani yagnesh reddy - CS21BTECH11003
+
+
+
 #Assumption
 #1. Polytope is non-degenerate.
 #2. Polytope is bounded
@@ -115,6 +123,8 @@ def main():
     z = get_any_vertex(A,b,z)
     print(z,np.matmul(c.T,z))
     z = get_opt_vertex(A,z,c,b)
+    print("Optimized:")
+    print(z,np.matmul(c.T,z))
 
 
 
