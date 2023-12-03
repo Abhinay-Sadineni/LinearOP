@@ -1,6 +1,15 @@
+#team details
+#Sadineni Abhinay - CS21BTECH11055
+#G harshavardhan reddy -CS21BTECH11017
+#Karthik Kotikalapudi - CS21BTECH11030
+#Akkasani yagnesh reddy - CS21BTECH11003
+
+
+
+
+
 #Assumption
-#1. Polytope is non-degenerate.
-#2. Rank of A is n 
+#1. Rank of A is n 
 
 from scipy.linalg import null_space
 from scipy.optimize import root_scalar
