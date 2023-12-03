@@ -115,6 +115,8 @@ def main():
     z = get_any_vertex(A,b,z)
     print(z,np.matmul(c.T,z))
     z = get_opt_vertex(A,z,c,b)
+    print("Optimized:")
+    print(z,np.matmul(c.T,z))
 
 
 
