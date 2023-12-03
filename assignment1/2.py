@@ -75,7 +75,7 @@ def get_opt_vertex(A,z,C,b):
     # print(A1)
     A2 =  [A[i] for i in untight_rows]
     coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
-    while not np.all(coeff > 0) :
+    while not np.all(abs(coeff) <= 1e-5):
        i = np.where(coeff < 0)[0][0]
        A1_inv = np.linalg.inv(A1)
        c = A1_inv[:,i]
@@ -95,52 +95,31 @@ def get_opt_vertex(A,z,C,b):
 
 
 def main():
-    # arr = np.loadtxt("sample_data.csv", delimiter=",", dtype=float)
+    arr = np.loadtxt("2.csv", delimiter=",", dtype=float)
 
-    # # Extracting z, A, c, and b from the loaded data
-    # z = arr[0, :-1]  # Initial feasible point, excluding the last element
-    # c = arr[1, :-1]  # Cost vector, excluding the last element
-    # b = arr[2:, -1]  # Constraint vector, last column excluding the top two elements
-    # A = arr[2:, :-1]  # Matrix A, excluding the last column and top two rows
+    # Extracting z, A, c, and b from the loaded data
+    z = arr[0, :-1]  # Initial feasible point, excluding the last element
+    c = arr[1, :-1]  # Cost vector, excluding the last element
+    b = arr[2:, -1]  # Constraint vector, last column excluding the top two elements
+    A = arr[2:, :-1]  # Matrix A, excluding the last column and top two rows
 
-    # # Now you have z, A, c, and b
-    # print("z:", z)
-    # print("A:", A)
-    # print("c:", c)
-    # print("b:", b)
+    # Now you have z, A, c, and b
+    print("z:", z)
+    print("A:", A)
+    print("c:", c)
+    print("b:", b)
 
-    # #get optimum vertex
+    #get optimum vertex
     # Z = get_opt_vertex(A,z,c,b)
-    A = [[1,1],[-1,-1],[-1,0],[0,-1]]
-    b = [2,-1,0,0]
-    C = [1,0.5]
-    z = [0.7,0.3]
+    # A = [[1,1],[-1,-1],[-1,0],[0,-1]]
+    # b = [2,-1,0,0]
+    # C = [1,0.5]
+    # z = [0.7,0.3]
     z = get_any_vertex(A,b,z)
     print(z)
-    z = get_opt_vertex(A,z,C,b)
+    z = get_opt_vertex(A,z,c,b)
     print(z)
-    print(z)
+    # print(z)
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-        
-
-
-
-
-    
-         
-
-
-    
-
-    
-        
-
-
