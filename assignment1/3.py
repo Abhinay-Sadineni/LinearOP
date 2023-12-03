@@ -29,9 +29,9 @@ def get_new_z(A,A2,z,X,b):
         if not np.allclose(np.dot(A2[i], X), 0,rtol= tolerance):
             alpha = difference / np.dot(A2[i], X)
             if(alpha != 0 ) :
-                if np.all(np.dot(A,z+alpha*X) <= b):
+                if np.all(np.dot(A,z+alpha*X)-b <= tolerance):
                     return z + alpha*X, True
-    return z, False  
+    return z, False
     
 def get_any_vertex(A,b,z):
     if np.all(np.dot(A,z) <= b):
@@ -86,7 +86,7 @@ def get_opt_vertex(A,z,C,b):
             print(z)
             z = get_opt_vertex(A,z,C,b)
             print(z)
-            break;        
+            break     
        A1_inv = np.linalg.inv(A1)
        c = A1_inv[:,i]
        c = -1*c.flatten()
@@ -95,7 +95,6 @@ def get_opt_vertex(A,z,C,b):
        if not flg :
                print("Unbounded\n")
                break
-       
        initial_size = len(A1)
        tight_rows , untight_rows =  get_rows(A,z,b)
        A1 = np.array([A[i] for i in tight_rows])
@@ -111,7 +110,7 @@ def get_opt_vertex(A,z,C,b):
             print(z)
             z = get_opt_vertex(A,z,C,b)
             print(z)
-            break;
+            break
        coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
     return z
     
