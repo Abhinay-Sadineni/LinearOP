@@ -6,17 +6,16 @@
 
 
 
-
-
 #Assumption
 #1. Rank of A is n 
 
 from scipy.linalg import null_space
 from scipy.optimize import root_scalar
-#given feasible point z
 import numpy as np
 
-tolerance = 1e-5
+tolerance = 1e-7
+np.random.seed(42)
+
 global b
 def get_rows(A,z,b):
     R = np.dot(A,z)-b
@@ -29,26 +28,30 @@ def get_rows(A,z,b):
         untight.append(i)
     return tight , untight      
 
+
+
 def get_alpha(A,z,X,i,b):
     if not np.allclose(np.dot(A[i], X), 0,rtol= tolerance):
         def equation(alpha):
             return np.dot(A[i], (z + alpha * X)) - b[i]
-        def derivative(alpha):
-            return np.dot(A[i], X)
-        result = root_scalar(equation, x0=0.0, method='newton', fprime=derivative, xtol=tolerance)
-        return result.root 
+        result = root_scalar(equation, x0=0.0, method='newton', xtol=tolerance)
+        return result.root
+    else :
+        return 0  
 
-def isvalid(A, z, u, i, b):
-    alpha = get_alpha(A, z, u, i, b)
-    if alpha is not None and alpha != 0:
-        z_prime = z + alpha*u
-        if np.all(np.matmul(A, z_prime) <= b):
+def isvalid(A,z,u,i,b):
+    alpha = get_alpha(A,z,u,i,b)
+    if(alpha != 0) : 
+        z_prime = z + alpha * u
+        if(np.all(np.matmul(A,z_prime)<=b)): 
             return True
-    return False
+    else : 
+        return False 
     
 def get_any_vertex(A,b,z):
     if np.all(np.dot(A,z) <= b):
-       print("intial point is feasible")
+        #do nothing
+       print("Given point is feasible")
     else:
         return None
     tight_rows , untight_rows =  get_rows(A,z,b)
@@ -66,6 +69,7 @@ def get_any_vertex(A,b,z):
         else :
             A1 = [A[i] for i in tight_rows]
             A2 =  [A[i] for i in untight_rows]
+            # get an arbitary vector from nullspace for A1
             null_space_matrix = null_space(A1)
             X = null_space_matrix[:, 0]
             alpha= 0
@@ -84,13 +88,16 @@ def get_opt_vertex(A,z,C,b):
     coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0].flatten()
     while not np.all(coeff > -tolerance):
        i = np.where(coeff < -tolerance)[0][0]
+      
        if len(A1) > len(A1[0]):
+            
             b = remove_degenerate(A,b,z)
             z = get_any_vertex(A,b,z)
             z = get_opt_vertex(A,z,C,b)
             break 
        A1_inv = np.linalg.inv(A1)
        c = A1_inv[:,i].flatten()
+    
        c = -1*c
        alpha= 0
        flg = False
@@ -99,15 +106,13 @@ def get_opt_vertex(A,z,C,b):
                 flg = True
                 alpha = get_alpha(A,z,c,i,b)
        if(flg == False) :
-           print("Unbounded")
            return
        z = z +alpha*c
-       initial_size = len(A1)
+
        tight_rows , untight_rows =  get_rows(A,z,b)
        A1 = np.array([A[i] for i in tight_rows])
-       A2 =  [A[i] for i in untight_rows]
-       new_size = len(A1)
        coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
+       print(z,np.matmul(C.T,z))
     return z
     
 def remove_degenerate(A,b,z):
@@ -124,17 +129,20 @@ def remove_degenerate(A,b,z):
         tight_rows , untight_rows =  get_rows(A,z,B)
         A1 =A[tight_rows]
         if len(A1) <= len(A1[0]):
+            print("Degeneracy removed")
             break
     return B
+        
 
 def main():
-    myfile = input("Enter file name: ")
-    arr = np.loadtxt(myfile, delimiter=",", dtype=float)
+    arr = np.loadtxt("test/test_cases_3/1.csv", delimiter=",", dtype=float)
 
-    z = arr[0, :-1]  # Initial feasible point, excluding the last element
-    c = arr[1, :-1]  # Cost vector, excluding the last element
-    b = arr[2:, -1]  # Constraint vector, last column excluding the top two elements
-    A = arr[2:, :-1]  # Matrix A, excluding the last column and top two rows
+    # Extracting z, A, c, and b from the loaded data
+    z = arr[0, :-1]  
+    c = arr[1, :-1]  
+    b = arr[2:, -1]  
+    A = arr[2:, :-1]  
+
 
     z = get_any_vertex(A,b,z)
     print(z,np.matmul(c.T,z))

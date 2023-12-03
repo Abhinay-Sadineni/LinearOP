@@ -18,6 +18,7 @@ from scipy.linalg import null_space
 import numpy as np
 
 tolerance = 1e-5
+np.random.seed(42)
 
 def get_rows(A,z,b):
     R = np.dot(A,z)-b
@@ -55,7 +56,6 @@ tolerance = 1e-7
 global b
 def get_rows(A,z,b):
     R = np.dot(A,z)-b
-    print(R)
     tight = []
     untight = []
     for i in range(len(b)):
