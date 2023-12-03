@@ -7,10 +7,11 @@ from scipy.optimize import root_scalar
 #given feasible point z
 import numpy as np
 
-tolerance = 1e-5
+tolerance = 1e-7
 global b
 def get_rows(A,z,b):
     R = np.dot(A,z)-b
+    print(R)
     tight = []
     untight = []
     for i in range(len(b)):
@@ -108,12 +109,19 @@ def get_opt_vertex(A,z,C,b):
     coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0].flatten()
     while not np.all(coeff > -tolerance):
        i = np.where(coeff < -tolerance)[0][0]
+       print("i: ",i)
+
+       print(len(A1))
+       print(len(A1[0]))
        if len(A1) > len(A1[0]):
             print("Degenerate case\n")
             epsilon = 1e-5
             b = remove_degenerate(A,b,z)
+            print(np.dot(A,z).shape,b.shape)
+            z = get_any_vertex(A,b,z)
+            print("gg")
             z = get_opt_vertex(A,z,C,b)
-            print("z: ",z)
+            # print("z: ",z)
             break 
        A1_inv = np.linalg.inv(A1)
        c = A1_inv[:,i].flatten()
@@ -138,17 +146,22 @@ def get_opt_vertex(A,z,C,b):
     #            break
        initial_size = len(A1)
        tight_rows , untight_rows =  get_rows(A,z,b)
+       print("nbnsbd")
        A1 = np.array([A[i] for i in tight_rows])
        A2 =  [A[i] for i in untight_rows]
-       new_size = len(A2)
-       if (new_size-initial_size > 1):
-            print("Degenerate case\n")
-            epsilon = 1e-5
-            #adding infinitesimally small epsilon to b vector, perturbing b vector
-            z = get_opt_vertex(A,z,C,b)
-            print("z: ",z)
-            break
+       new_size = len(A1)
+       print(new_size)
+       print(initial_size)
+    #    if (new_size-initial_size > 1):
+    #         print("Degenerate case\n")
+    #         epsilon = 1e-5
+    #         #adding infinitesimally small epsilon to b vector, perturbing b vector
+    #         z = get_opt_vertex(A,z,C,b)
+    #         print("z: ",z)
+    #         break
+       print("old coeff:", coeff)
        coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
+       print("coeff:", coeff)
     return z
     
 def remove_degenerate(A,b,z):
@@ -162,12 +175,15 @@ def remove_degenerate(A,b,z):
         else:
             B = b.copy()
             B[:rows] += np.random.uniform(0.1,10,size=rows)
-        tight_rows , untight_rows =  get_rows(A,z,b)
+        tight_rows , untight_rows =  get_rows(A,z,B)
         A1 =A[tight_rows]
+        print("remove:",len(A1))
+        print("remove:",len(A1[0]))
+        print(B)
         if len(A1) <= len(A1[0]):
             print("Degeneracy removed")
             break
-    return b
+    return B
         
 
 
@@ -181,7 +197,7 @@ def remove_degenerate(A,b,z):
 # print(z)
 
 def main():
-    arr = np.loadtxt("../test/test_cases_3/2.csv", delimiter=",", dtype=float)
+    arr = np.loadtxt("test/test_cases_3/2.csv", delimiter=",", dtype=float)
 
     # Extracting z, A, c, and b from the loaded data
     z = arr[0, :-1]  # Initial feasible point, excluding the last element
