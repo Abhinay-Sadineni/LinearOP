@@ -74,10 +74,12 @@ def get_opt_vertex(A,z,C,b):
     # print(A1)
     A2 =  [A[i] for i in untight_rows]
     coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
-    while not np.all(coeff > 0) :
-       i = np.where(coeff < 0)
+    while not np.all(abs(coeff) <= 1e-5):
+       i = np.where(coeff < 0)[0][0]
        A1_inv = np.linalg.inv(A1)
+       print(A1,A1_inv)
        c = A1_inv[:,i]
+       print(c)
        c = -1*c.flatten()
        z,flg = get_new_z(A,A2,z,c,b)
 
@@ -92,38 +94,40 @@ def get_opt_vertex(A,z,C,b):
     
     
 
-A = [[1,1],[-1,-1],[-1,0],[0,-1]]
-b = [2,-1,0,0]
-C = [1,0.5]
-z = [0.3,0.7]
-print(np.matmul(A,z)-b)
-z = get_any_vertex(A,b,z)
-print(z)
-z = get_opt_vertex(A,z,C,b)
-print(z)
+# A = [[1,1],[-1,-1],[-1,0],[0,-1]]
+# b = [2,-1,0,0]
+# C = [1,0.5]
+# z = [0.3,0.7]
+# print(np.matmul(A,z)-b)
+# z = get_any_vertex(A,b,z)
+# print(z)
+# z = get_opt_vertex(A,z,C,b)
+# print(z)
 
 
-# def main():
-#     arr = np.loadtxt("sample_data.csv", delimiter=",", dtype=float)
+def main():
+    arr = np.loadtxt("../test/test_cases_1/2.csv", delimiter=",", dtype=float)
 
-#     # Extracting z, A, c, and b from the loaded data
-#     z = arr[0, :-1]  # Initial feasible point, excluding the last element
-#     c = arr[1, :-1]  # Cost vector, excluding the last element
-#     b = arr[2:, -1]  # Constraint vector, last column excluding the top two elements
-#     A = arr[2:, :-1]  # Matrix A, excluding the last column and top two rows
+    # Extracting z, A, c, and b from the loaded data
+    z = arr[0, :-1]  # Initial feasible point, excluding the last element
+    c = arr[1, :-1]  # Cost vector, excluding the last element
+    b = arr[2:, -1]  # Constraint vector, last column excluding the top two elements
+    A = arr[2:, :-1]  # Matrix A, excluding the last column and top two rows
 
-#     # Now you have z, A, c, and b
-#     print("z:", z)
-#     print("A:", A)
-#     print("c:", c)
-#     print("b:", b)
+    # Now you have z, A, c, and b
+    print("z:", z)
+    print("A:", A)
+    print("c:", c)
+    print("b:", b)
 
-#     #get optimum vertex
-#     Z = get_opt_vertex(A,z,c,b)
-#     print(z)
+    z = get_any_vertex(A,b,z)
+    #get optimum vertex
+    print(z)
+    z = get_opt_vertex(A,z,c,b)
+    print(z)
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
 
 
 

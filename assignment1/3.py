@@ -76,7 +76,7 @@ def get_opt_vertex(A,z,C,b):
     # print(A1)
     A2 =  [A[i] for i in untight_rows]
     coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
-    while not np.all(coeff > 0) :
+    while not np.all(abs(coeff) <= 1e-5):
        i = np.where(coeff < 0)[0][0]
        if len(A1) > len(A1[0]):
             print("Degenerate case\n")
@@ -129,7 +129,7 @@ def get_opt_vertex(A,z,C,b):
 # print(z)
 
 def main():
-    arr = np.loadtxt("2.csv", delimiter=",", dtype=float)
+    arr = np.loadtxt("../test/test_cases_3/1.csv", delimiter=",", dtype=float)
 
     # Extracting z, A, c, and b from the loaded data
     z = arr[0, :-1]  # Initial feasible point, excluding the last element
