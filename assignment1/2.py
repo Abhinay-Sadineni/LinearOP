@@ -89,7 +89,7 @@ def get_opt_vertex(A,z,C,b):
                 alpha = get_alpha(A,z,c,i,b)
        if(flg == False) :
            print("Unbounded")
-           return
+           exit(1)
        z = z +alpha*c
        print(z,np.matmul(C.T,z))
        tight_rows , untight_rows =  get_rows(A,z,b)
@@ -111,6 +111,8 @@ def main():
     z = get_any_vertex(A,b,z)
     print(z,np.matmul(c.T,z))
     z = get_opt_vertex(A,z,c,b)
+    print("Optimized:")
+    print(z,np.matmul(c.T,z))
 
 if __name__ == "__main__":
     main()
