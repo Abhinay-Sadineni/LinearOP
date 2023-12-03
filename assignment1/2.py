@@ -30,7 +30,7 @@ def get_new_z(A,A2,z,X,b):
             alpha = difference / np.dot(A2[i], X)
             if(alpha != 0 ) :
                 if np.all(np.dot(A,z+alpha*X) <= b):
-                    return z + alpha*X, True
+                    return z + alpha*X, True    
     return z, False  
     
 def get_any_vertex(A,b,z):
@@ -92,32 +92,33 @@ def get_opt_vertex(A,z,C,b):
     return z
     
 
-A = [[1,1],[-1,-1],[-1,0],[0,-1]]
-b = [2,-1,0,0]
-C = [1,0.5]
-z = [0.3,0.7]
-z = get_any_vertex(A,b,z)
-print(z)
-z = get_opt_vertex(A,z,C,b)
-print(z)
+
 
 def main():
-    arr = np.loadtxt("sample_data.csv", delimiter=",", dtype=float)
+    # arr = np.loadtxt("sample_data.csv", delimiter=",", dtype=float)
 
-    # Extracting z, A, c, and b from the loaded data
-    z = arr[0, :-1]  # Initial feasible point, excluding the last element
-    c = arr[1, :-1]  # Cost vector, excluding the last element
-    b = arr[2:, -1]  # Constraint vector, last column excluding the top two elements
-    A = arr[2:, :-1]  # Matrix A, excluding the last column and top two rows
+    # # Extracting z, A, c, and b from the loaded data
+    # z = arr[0, :-1]  # Initial feasible point, excluding the last element
+    # c = arr[1, :-1]  # Cost vector, excluding the last element
+    # b = arr[2:, -1]  # Constraint vector, last column excluding the top two elements
+    # A = arr[2:, :-1]  # Matrix A, excluding the last column and top two rows
 
-    # Now you have z, A, c, and b
-    print("z:", z)
-    print("A:", A)
-    print("c:", c)
-    print("b:", b)
+    # # Now you have z, A, c, and b
+    # print("z:", z)
+    # print("A:", A)
+    # print("c:", c)
+    # print("b:", b)
 
-    #get optimum vertex
-    Z = get_opt_vertex(A,z,c,b)
+    # #get optimum vertex
+    # Z = get_opt_vertex(A,z,c,b)
+    A = [[1,1],[-1,-1],[-1,0],[0,-1]]
+    b = [2,-1,0,0]
+    C = [1,0.5]
+    z = [0.7,0.3]
+    z = get_any_vertex(A,b,z)
+    print(z)
+    z = get_opt_vertex(A,z,C,b)
+    print(z)
     print(z)
 
 if __name__ == "__main__":
