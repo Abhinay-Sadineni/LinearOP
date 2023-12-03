@@ -106,16 +106,12 @@ def get_opt_vertex(A,z,C,b):
     # print(A1)
     A2 =  [A[i] for i in untight_rows]
     coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0].flatten()
-    while not np.all(coeff > tolerance):
-       i = np.where(coeff < 0)[0][0]
+    while not np.all(coeff > -tolerance):
+       i = np.where(coeff < -tolerance)[0][0]
        if len(A1) > len(A1[0]):
             print("Degenerate case\n")
             epsilon = 1e-5
-            #adding infinitesimally small epsilon to b vector, perturbing b vector
-            for i in range(len(b)):
-                b[i] = b[i] + epsilon ** (i+1)
-            z = get_any_vertex(A,b,z)
-            print("z: ",z)
+            b = remove_degenerate(A,b,z)
             z = get_opt_vertex(A,z,C,b)
             print("z: ",z)
             break 
@@ -124,13 +120,14 @@ def get_opt_vertex(A,z,C,b):
     
        c = -1*c
     #    z,flg = get_new_z(A,A2,z,c,b)
-
        alpha= 0
        flg = False
        for i in untight_rows:
+            print("y")
             if(isvalid(A,z,c,i,b)) :
                 flg = True
                 alpha = get_alpha(A,z,c,i,b)
+            print("y")
        if(flg == False) :
            print("Unbounded")
            return
@@ -148,16 +145,31 @@ def get_opt_vertex(A,z,C,b):
             print("Degenerate case\n")
             epsilon = 1e-5
             #adding infinitesimally small epsilon to b vector, perturbing b vector
-            for i in range(len(b)):
-                b[i] = b[i] + epsilon ** (i+1)
-            z = get_any_vertex(A,b,z)
-            print("z: ",z)
             z = get_opt_vertex(A,z,C,b)
             print("z: ",z)
             break
        coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
     return z
     
+def remove_degenerate(A,b,z):
+    rows = A.shape[0]-A.shape[1]
+    count = 1
+    while 1:
+        if count < 1000:
+            count += 1
+            B = b.copy()
+            B[:rows] += np.random.uniform(1e-6,1e-5,size=rows)
+        else:
+            B = b.copy()
+            B[:rows] += np.random.uniform(0.1,10,size=rows)
+        tight_rows , untight_rows =  get_rows(A,z,b)
+        A1 =A[tight_rows]
+        if len(A1) <= len(A1[0]):
+            print("Degeneracy removed")
+            break
+    return b
+        
+
 
 # A = [[-1,0,0],[0,-1,0],[0,0,-1],[1,1,1]]
 # b = [0,0,0,8]
@@ -169,7 +181,7 @@ def get_opt_vertex(A,z,C,b):
 # print(z)
 
 def main():
-    arr = np.loadtxt("../test/test_cases_3/1.csv", delimiter=",", dtype=float)
+    arr = np.loadtxt("../test/test_cases_3/2.csv", delimiter=",", dtype=float)
 
     # Extracting z, A, c, and b from the loaded data
     z = arr[0, :-1]  # Initial feasible point, excluding the last element
