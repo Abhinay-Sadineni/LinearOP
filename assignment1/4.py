@@ -20,6 +20,27 @@ def get_rows(A,z,b):
         untight.append(i)
     return tight , untight      
 
+def solve(A,b):
+    try:
+     x = np.linalg.solve(A,b)
+     return x
+    except np.linalg.LinAlgError:
+     return None
+
+def get_vertex_point_from_comb(A,z,b):
+    indices = [i for i in range(A)]
+    all_forms = combinations(indices ,len(A))
+    for i in range(len(all_forms)):
+          result = solve(A[all_forms[i]],b[all_forms[i]])
+          if result is None: continue
+          else: return result
+    return None    
+
+
+
+
+
+
 
 def get_new_z(A,A2,z,X,b):
 
@@ -76,8 +97,8 @@ def get_opt_vertex(A,z,C,b):
     # print(A1)
     A2 =  [A[i] for i in untight_rows]
     coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
-    while not np.all(coeff >= -tolerance):
-       i = np.where(coeff < -1e-5)[0][0]
+    while not np.all(abs(coeff) <= 1e-5):
+       i = np.where(coeff < 0)[0][0]
        if len(A1) > len(A1[0]):
             print("Degenerate case\n")
             epsilon = 1e-5
