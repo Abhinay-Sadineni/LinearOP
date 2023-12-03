@@ -28,7 +28,7 @@ def get_new_z(A,A2,z,X,b):
         if not np.allclose(np.dot(A2[i], X), 0,rtol= tolerance):
             alpha = difference / np.dot(A2[i], X)
             if(alpha != 0 ) :
-                if np.all(np.dot(A,z+alpha*X)-b <= 0):
+                if np.all(np.dot(A,z+alpha*X)-b <= tolerance):
                     return z + alpha*X, True
     return z, False  
     
