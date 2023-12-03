@@ -76,7 +76,7 @@ def get_opt_vertex(A,z,C,b):
     coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
     while not np.all(coeff > 0) :
        i = np.where(coeff < 0)
-       if np.linalg.matrix_rank(A1) < len(A1[0]):
+       if len(A1) > len(A1[0]):
             print("Degenerate case\n")
             epsilon = 1e-5
             #adding infinitesimally small epsilon to b vector, perturbing b vector
@@ -84,7 +84,6 @@ def get_opt_vertex(A,z,C,b):
                 b[i] = b[i] + epsilon ** (i+1)
             z = get_any_vertex(A,b,z)
             print(z)
-            print("A: ",A)
             z = get_opt_vertex(A,z,C,b)
             print(z)
             break;        
@@ -97,11 +96,11 @@ def get_opt_vertex(A,z,C,b):
                print("Unbounded\n")
                break
        
-       initial_size = A1.size
+       initial_size = len(A1)
        tight_rows , untight_rows =  get_rows(A,z,b)
        A1 = np.array([A[i] for i in tight_rows])
        A2 =  [A[i] for i in untight_rows]
-       new_size = A1.size
+       new_size = len(A1)
        if (new_size-initial_size > 1):
             print("Degenerate case\n")
             epsilon = 1e-5
