@@ -22,7 +22,6 @@ def get_rows(A,z,b):
 
 
 def get_new_z(A,A2,z,X,b):
-
     #A[i] * z + alpha * A[i] * X = b[i]
     for i in range(len(A2)):
         difference = b[i] - np.dot(A2[i], z)

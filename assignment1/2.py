@@ -76,7 +76,7 @@ def get_opt_vertex(A,z,C,b):
     A2 =  [A[i] for i in untight_rows]
     coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
     while not np.all(coeff > 0) :
-       i = np.where(coeff < 0)
+       i = np.where(coeff < 0)[0][0]
        A1_inv = np.linalg.inv(A1)
        c = A1_inv[:,i]
        c = -1*c.flatten()
