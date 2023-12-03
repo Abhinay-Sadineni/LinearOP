@@ -27,19 +27,15 @@ def solve(A,b):
     except np.linalg.LinAlgError:
      return None
 
-def get_vertex_point_from_comb(A,z,b):
-    indices = [i for i in range(A)]
-    all_forms = combinations(indices ,len(A))
+def get_vertex_point_from_comb(A,b):
+    indices = [i for i in range(len(A))]
+    all_forms = combinations(indices ,len(A[0]))
     for i in range(len(all_forms)):
           result = solve(A[all_forms[i]],b[all_forms[i]])
           if result is None: continue
-          else: return result
+          else: 
+            if(np.all(np.dot(A,result)<=b)):return result
     return None    
-
-
-
-
-
 
 
 def get_new_z(A,A2,z,X,b):
