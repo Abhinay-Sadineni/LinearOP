@@ -135,7 +135,8 @@ def remove_degenerate(A,b,z):
         
 
 def main():
-    arr = np.loadtxt("test/test_cases_3/1.csv", delimiter=",", dtype=float)
+    myfile = input("Enter file name: ")
+    arr = np.loadtxt(myfile, delimiter=",", dtype=float)
 
     # Extracting z, A, c, and b from the loaded data
     z = arr[0, :-1]  
@@ -147,6 +148,8 @@ def main():
     z = get_any_vertex(A,b,z)
     print(z,np.matmul(c.T,z))
     z = get_opt_vertex(A,z,c,b)
+    print("Optimized:")
+    print(z,np.matmul(c.T,z))
 
 if __name__ == "__main__":
     main()

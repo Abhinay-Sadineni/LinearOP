@@ -130,12 +130,11 @@ def get_opt_vertex(A,z,C,b):
            return
        z = z +alpha*c
 
-       initial_size = len(A1)
        tight_rows , untight_rows =  get_rows(A,z,b)
        A1 = np.array([A[i] for i in tight_rows])
        A2 =  [A[i] for i in untight_rows]
-       new_size = len(A1)
        coeff = np.linalg.lstsq(A1.T, C, rcond=None)[0]
+       print(z,np.matmul(C.T,z))
     return z
     
 def remove_degenerate(A,b,z):
