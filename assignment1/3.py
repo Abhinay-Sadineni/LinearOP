@@ -129,7 +129,7 @@ def get_opt_vertex(A,z,C,b):
 # print(z)
 
 def main():
-    arr = np.loadtxt("2.csv", delimiter=",", dtype=float)
+    arr = np.loadtxt("assignment1/2.csv", delimiter=",", dtype=float)
 
     # Extracting z, A, c, and b from the loaded data
     z = arr[0, :-1]  # Initial feasible point, excluding the last element
